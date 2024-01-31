@@ -12,11 +12,16 @@
 // frame buffer
 CRGB leds[NUM_LEDS];
 
-#define pwmPin1 5
-
 // animation libraries
 #include "cylon.hpp"
 #include "comet.hpp"
+
+// palettes
+#include "palettes.hpp"
+
+
+#define pwmPin1 5
+TProgmemRGBPalette16 *currentPalette = Palette[3];
 
 // setting-up
 
@@ -86,13 +91,17 @@ void loop() {
   //cylon(false, 25);
   //DrawComet();
   //FastLED.show();
+
+
   //for (uint8_t i=0; i<10; i++){
   //  setPWMDutyCycle(pwmPin1, i*10);
   //  delay(10*(1+random8(32)));
   //}
   setPWMDutyCycle(pwmPin1, (1+random8(100)));
-  delay(25 + random8(100));
+  //delay(25 + random8(100));
   //delay();
 
+  DrawComet_Pal(currentPalette);
+  FastLED.show();
 
 }
