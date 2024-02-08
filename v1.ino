@@ -7,7 +7,7 @@
 #define COLOR_ORDER    GRB
 #define CHIPSET        WS2812
 #define NUM_LEDS       39
-#define DEF_BRIGHTNESS 127
+#define DEF_BRIGHTNESS 255
 
 // frame buffer
 CRGB leds[NUM_LEDS];
@@ -15,16 +15,27 @@ CRGB leds[NUM_LEDS];
 // animation libraries
 #include "cylon.hpp"
 #include "comet.hpp"
+#include "rainbow.hpp"
+#include "fire_1d.hpp"
 
 // palettes
 #include "palettes.hpp"
 
+// animation variables
+// common parameters
+uint16_t delay_ms = 25; // delay in ms for drawing animations (can be different for different animations)
+TProgmemRGBPalette16 *currentPalette = Palette[3]; // default palette, "fire" as of now
 
+// fire
+uint16_t x, y = 0;
+uint8_t scale = 30;  // default: 64
+uint8_t speed = 32;  // default: 92
+uint8_t blend_alpha = 92; // blending parameter
+
+// define PWM pin
 #define pwmPin1 5
-TProgmemRGBPalette16 *currentPalette = Palette[3];
 
 // setting-up
-
 void setup_PWM(uint16_t pwm_freq){
   // Configure Timer1 for custom PWM frequency without a prescaler
   // ChatGPT, Thank you!
@@ -59,14 +70,16 @@ void setup() {
   // TypicalLEDStrip  TypicalSMD5050 TypicalPixelString
   // TypicalSMD5050=0xFFB0F0 /* 255, 176, 240 */,
   // TypicalLEDStrip=0xFFB0F0 /* 255, 176, 240 */,
-  // Typical values for 8 mm "pixels on a string".
-  // Also for many through-hole 'T' package LEDs.
   // Typical8mmPixel=0xFFE08C /* 255, 224, 140 */,
   // TypicalPixelString=0xFFE08C /* 255, 224, 140 */,
   setup_leds(TypicalPixelString);
 
   // random seed
   randomSeed(analogRead(0));
+
+  // set random variables for fire animation
+  x = random16();
+  y = random16();
 
   // PWM @ 8 kHz
   setup_PWM(8000);
@@ -97,11 +110,29 @@ void loop() {
   //  setPWMDutyCycle(pwmPin1, i*10);
   //  delay(10*(1+random8(32)));
   //}
-  setPWMDutyCycle(pwmPin1, (1+random8(100)));
+  
+  // some random PWM
+  //setPWMDutyCycle(pwmPin1, (1+random8(100)));
   //delay(25 + random8(100));
   //delay();
+  setPWMDutyCycle(pwmPin1, 100);
 
-  DrawComet_Pal(currentPalette);
-  FastLED.show();
+  
+  // Check drawing a comet with a palette
+  //currentPalette = Palette[9];
+  //DrawComet_Pal(currentPalette);
+  //FastLED.show();
+
+  // test rainbow
+  //static uint8_t shue = 0;
+  //rainbow(leds, shue, delay_ms);
+  //shue+=5;
+
+  // Check fire 1d
+  currentPalette = Palette[3];
+  fire1d(leds, currentPalette, x, y, scale, speed, blend_alpha, delay_ms);
+  x += speed/8;
+  y += speed;
+
 
 }
