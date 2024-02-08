@@ -115,7 +115,9 @@ void loop() {
   //setPWMDutyCycle(pwmPin1, (1+random8(100)));
   //delay(25 + random8(100));
   //delay();
-  setPWMDutyCycle(pwmPin1, 100);
+  uint8_t pwm_val = inoise8(scale-y);
+  pwm_val = map(0, 255, 0, 100, pwm_val);
+  setPWMDutyCycle(pwmPin1, pwm_val);
 
   
   // Check drawing a comet with a palette
@@ -129,7 +131,7 @@ void loop() {
   //shue+=5;
 
   // Check fire 1d
-  currentPalette = Palette[3];
+  currentPalette = Palette[4];
   fire1d(leds, currentPalette, x, y, scale, speed, blend_alpha, delay_ms);
   x += speed/8;
   y += speed;
