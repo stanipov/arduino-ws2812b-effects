@@ -30,6 +30,7 @@ void DrawComet()
         if (random(8) > 4)
             leds[j] = leds[j].fadeToBlackBy(fadeAmt);  
 
+    FastLED.show(); 
     delay(50);
 }
 
@@ -57,6 +58,8 @@ void DrawComet_Pal(TProgmemRGBPalette16 *pal){
         if (random(8) > 4)
             leds[j] = leds[j].fadeToBlackBy(fadeAmt);  
 
+    //leds = applyGamma_video(leds, 1.8);
+    FastLED.show(); 
     delay(50);
 
     col += deltaCol;
