@@ -1,3 +1,6 @@
+// https://github.com/FastLED/FastLED/wiki/RGBSet-Reference
+// https://forum.makerforums.info/t/i-a-looking-for-an-example-of-crgb-array-how-would-i-define-a/64587/2
+
 // Allow interruptions for working controls (e.g. keys or IR remote)
 #define FASTLED_ALLOW_INTERRUPTS 1
 #include <FastLED.h>
@@ -11,26 +14,55 @@
 
 // frame buffer
 CRGB leds[NUM_LEDS];
-
-// animation libraries
-#include "cylon.hpp"
-#include "comet.hpp"
-#include "rainbow.hpp"
-#include "fire_1d.hpp"
+//CRGBArray<NUM_LEDS> leds;
 
 // palettes
 #include "palettes.hpp"
 
-// animation variables
+// *********** ANIMATION VARIABLES ***********
 // common parameters
 uint16_t delay_ms = 25; // delay in ms for drawing animations (can be different for different animations)
 TProgmemRGBPalette16 *currentPalette = Palette[3]; // default palette, "fire" as of now
+float gammaCorr=2.2; 
 
 // fire
 uint16_t x, y = 0;
 uint8_t scale = 30;  // default: 64
 uint8_t speed = 32;  // default: 92
 uint8_t blend_alpha = 92; // blending parameter
+
+// twinkle
+// Overall twinkle speed.
+// 0 (VERY slow) to 8 (VERY fast).  
+// 4, 5, and 6 are recommended, default is 4.
+#define TWINKLE_SPEED 4
+
+// Overall twinkle density.
+// 0 (NONE lit) to 8 (ALL lit at once).  
+// Default is 5.
+#define TWINKLE_DENSITY 2
+
+// If AUTO_SELECT_BACKGROUND_COLOR is set to 1,
+// then for any palette where the first two entries 
+// are the same, a dimmed version of that color will
+// automatically be used as the background color.
+#define AUTO_SELECT_BACKGROUND_COLOR 0
+
+// Background color for 'unlit' pixels
+// Can be set to CRGB::Black if desired.
+CRGB gBackgroundColor = CRGB::Black; 
+
+// If COOL_LIKE_INCANDESCENT is set to 1, colors will 
+// fade out slighted 'reddened', similar to how
+// incandescent bulbs change color as they get dim down.
+#define COOL_LIKE_INCANDESCENT 0
+
+// animation libraries
+#include "cylon.hpp"
+#include "comet.hpp"
+#include "rainbow.hpp"
+#include "fire_1d.hpp"
+#include "twinkle.hpp"
 
 // define PWM pin
 #define pwmPin1 5
@@ -100,11 +132,22 @@ void setPWMDutyCycle(int pin, int dutyCycle) {
 }
 
 
+void two_dots(CRGBSet& L){
+  for(int i = 0; i < NUM_LEDS-1; i++) { L(i,i+1) = CRGB::Red; FastLED.delay(33); L(i,i+1) = CRGB::Black; }
+}
+
+
+
+
+
 void loop() {
+
+  //two_dots(leds);
+  //DrawComet_Pal(currentPalette, leds);
+
   //cylon(false, 25);
   //DrawComet();
   //FastLED.show();
-
 
   //for (uint8_t i=0; i<10; i++){
   //  setPWMDutyCycle(pwmPin1, i*10);
@@ -115,11 +158,10 @@ void loop() {
   //setPWMDutyCycle(pwmPin1, (1+random8(100)));
   //delay(25 + random8(100));
   //delay();
-  uint8_t pwm_val = inoise8(scale-y);
-  pwm_val = map(0, 255, 0, 100, pwm_val);
-  setPWMDutyCycle(pwmPin1, pwm_val);
+  //uint8_t pwm_val = inoise8(scale-y);
+  //pwm_val = map(0, 255, 0, 100, pwm_val);
+  //setPWMDutyCycle(pwmPin1, pwm_val);
 
-  
   // Check drawing a comet with a palette
   //currentPalette = Palette[9];
   //DrawComet_Pal(currentPalette);
@@ -131,10 +173,13 @@ void loop() {
   //shue+=5;
 
   // Check fire 1d
-  currentPalette = Palette[4];
-  fire1d(leds, currentPalette, x, y, scale, speed, blend_alpha, delay_ms);
-  x += speed/8;
-  y += speed;
+  //currentPalette = Palette[16];
+  //fire1d(leds, *currentPalette, x, y, scale, speed, blend_alpha, delay_ms);
+  //x += speed/8;
+  //y += speed;
 
-
+  // Test Twinkle
+  currentPalette = Palette[15];
+  drawTwinkles(leds, *currentPalette);
+  //FastLED.show();
 }
