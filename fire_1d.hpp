@@ -14,7 +14,7 @@ uint8_t gen_perlin_noise8_2d(int X, int Y){
   return noise;
 }
 
-void fire1d(CRGB *arr, TProgmemRGBPalette16 *pal, uint16_t x, uint16_t y, uint8_t scale, uint8_t speed, uint8_t blend_a, uint16_t delay_ms){
+void fire1d(CRGB *arr, TProgmemRGBPalette16 &pal, uint16_t x, uint16_t y, uint8_t scale, uint8_t speed, uint8_t blend_a, uint16_t delay_ms){
   static uint8_t col, bri;
   //static uint32_t t;
 
@@ -31,9 +31,9 @@ void fire1d(CRGB *arr, TProgmemRGBPalette16 *pal, uint16_t x, uint16_t y, uint8_
       bri = bri * 2;
     }
 
-    nblend(arr[i], ColorFromPalette(*pal, col, bri), blend_a); //speed
+    nblend(arr[i], ColorFromPalette(pal, col, bri), blend_a); //speed
   }
-  arr = applyGamma_video(arr, 1.8);
+  arr = applyGamma_video(arr, gammaCorr);
   FastLED.show();
   delay(delay_ms);
 }

@@ -9,18 +9,31 @@ extern const TProgmemRGBPalette16 AlcoholFireColors_p FL_PROGMEM = {CRGB::Black,
 extern const TProgmemRGBPalette16 RubidiumFireColors_p FL_PROGMEM = {CRGB::Black, 0x0f001a, 0x1e0034, 0x2d004e, 0x3c0068, CRGB::Indigo, CRGB::Indigo, CRGB::Indigo, CRGB::Indigo, CRGB::Indigo, CRGB::Indigo, 0x3c0084, 0x2d0086, 0x1e0087, 0x0f0089, CRGB::DarkBlue};        //* Indigo
 extern const TProgmemRGBPalette16 PotassiumFireColors_p FL_PROGMEM = {CRGB::Black, 0x0f001a, 0x1e0034, 0x2d004e, 0x3c0068, CRGB::Indigo, 0x591694, 0x682da6, 0x7643b7, 0x855ac9, CRGB::MediumPurple, 0xa95ecd, 0xbe4bbe, 0xd439b0, 0xe926a1, CRGB::DeepPink}; //* Violet
 
+extern const TProgmemRGBPalette16 PolarLights_p FL_PROGMEM = { CRGB::Black, 0x228B223, 0x006D5B, 0x32CD32,  0x228B22};          
+extern const TProgmemRGBPalette16 PolarLights2_p FL_PROGMEM = {0x241751, 0x241751, 0x2b1f5f, 0x32276c, 0x392f7a,
+                                                              0x3f3788, 0x463f95, 0x4d47a3, 0x4d47a3, 0x5252aa,
+                                                              0x575cb1, 0x5d67b9, 0x6271c0, 0x677cc7, 0x6c86ce};          
+extern const TProgmemRGBPalette16 PolarLights3_p FL_PROGMEM = {0x0d3346, 0x0d3346, 0x0d3346, 0x0d3346,
+                                                               0x1f3f42, 0x1f3f42, 0x1f3f42, 0x1f3f42, 
+                                                               0x2f796c, 0x2f796c, 0x2f796c, 0x2f796c, 
+                                                               0x669e94, 0x669e94, 0x669e94, 0x669e94};
 const TProgmemRGBPalette16 *Palette[] = 
 {
-    &HeatColors_p, 
-    &WaterfallColors_p, 
-    &ForestColors_p, 
-    &WoodFireColors_p,
-    &NormalFire_p,
-    &Normalp,
-    &LithiumFireColors_p,
-    &SodiumFireColors_p,
-    &CopperFireColors_p,
-    &AlcoholFireColors_p,
-    &RubidiumFireColors_p,
-    &PotassiumFireColors_p
+    &HeatColors_p,              // 0
+    &WaterfallColors_p,         // 1
+    &ForestColors_p,            // 2
+    &WoodFireColors_p,          // 3
+    &NormalFire_p,              // 4
+    &Normalp,                   // 5
+    &LithiumFireColors_p,       // 6
+    &SodiumFireColors_p,        // 7
+    &CopperFireColors_p,        // 8
+    &AlcoholFireColors_p,       // 9  
+    &RubidiumFireColors_p,      // 10
+    &PotassiumFireColors_p,     // 11
+    &PolarLights_p,             // 12  not good
+    &PolarLights2_p,             // 13
+    &PolarLights3_p,              // 14
+    &RainbowColors_p,
+    &HeatColors_p
 };

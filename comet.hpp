@@ -4,7 +4,7 @@ Taken from https://github.com/davepl/DavesGarageLEDSeries/blob/master/LED%20Epis
 #define FASTLED_INTERNAL
 #include <FastLED.h>
 
-void DrawComet()
+void DrawComet(CRGB *L)
 {
     const byte fadeAmt = 128;
     const int cometSize = 4;
@@ -23,19 +23,20 @@ void DrawComet()
         iDirection *= -1;
     
     for (int i = 0; i < cometSize; i++)
-        leds[(int)iPos + i].setHue(hue);
+        L[(int)iPos + i].setHue(hue);
     
     // Randomly fade the LEDs
     for (int j = 0; j < NUM_LEDS; j++)
         if (random(8) > 4)
-            leds[j] = leds[j].fadeToBlackBy(fadeAmt);  
-
+            L[j] = L[j].fadeToBlackBy(fadeAmt);  
+            
+    L = applyGamma_video(L, gammaCorr);
     FastLED.show(); 
     delay(50);
 }
 
 
-void DrawComet_Pal(TProgmemRGBPalette16 *pal){
+void DrawComet_Pal(TProgmemRGBPalette16 *pal, CRGB *L){
     const byte fadeAmt = 128;
     const int cometSize = 4;
     const int deltaCol  = 4;
@@ -51,17 +52,16 @@ void DrawComet_Pal(TProgmemRGBPalette16 *pal){
         iDirection *= -1;
     
     for (int i = 0; i < cometSize; i++)
-        leds[(int)iPos + i] = ColorFromPalette(*pal, col, 255);
+        L[(int)iPos + i] = ColorFromPalette(*pal, col, 255);
     
     // Randomly fade the LEDs
     for (int j = 0; j < NUM_LEDS; j++)
         if (random(8) > 4)
-            leds[j] = leds[j].fadeToBlackBy(fadeAmt);  
+            L[j] = L[j].fadeToBlackBy(fadeAmt);  
 
-    //leds = applyGamma_video(leds, 1.8);
+    L = applyGamma_video(L, gammaCorr);
     FastLED.show(); 
     delay(50);
 
     col += deltaCol;
-
 }
