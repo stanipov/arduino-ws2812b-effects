@@ -3,6 +3,7 @@
 
 // Allow interruptions for working controls (e.g. keys or IR remote)
 #define FASTLED_ALLOW_INTERRUPTS 1
+#include <IRremote.hpp>   
 #include <FastLED.h>
 
 // Strip/string parameters
@@ -11,6 +12,10 @@
 #define CHIPSET        WS2812
 #define NUM_LEDS       39
 #define DEF_BRIGHTNESS 255
+
+// IR receiver pin #:
+#define IR_RECEIVE_PIN 12
+#define ENABLE_LED_FEEDBACK 1
 
 // frame buffer
 CRGB leds[NUM_LEDS];
@@ -24,6 +29,9 @@ CRGB leds[NUM_LEDS];
 uint16_t delay_ms = 25; // delay in ms for drawing animations (can be different for different animations)
 TProgmemRGBPalette16 *currentPalette = Palette[3]; // default palette, "fire" as of now
 float gammaCorr=2.2; 
+
+// rainbow
+uint8_t shue = 0;
 
 // fire
 uint16_t x, y = 0;
@@ -57,12 +65,18 @@ CRGB gBackgroundColor = CRGB::Black;
 // incandescent bulbs change color as they get dim down.
 #define COOL_LIKE_INCANDESCENT 0
 
+// waves
+uint8_t bpm = 10;
+uint8_t fadeAmt = 16;
+
+
 // animation libraries
 #include "cylon.hpp"
 #include "comet.hpp"
 #include "rainbow.hpp"
 #include "fire_1d.hpp"
 #include "twinkle.hpp"
+#include "pulse.hpp"
 
 // define PWM pin
 #define pwmPin1 5
@@ -97,6 +111,8 @@ void setup_leds(LEDColorCorrection corr){
 }
 
 void setup() {
+  //Serial.begin(9600);
+
   // LED setup
   // Color corrections 
   // TypicalLEDStrip  TypicalSMD5050 TypicalPixelString
@@ -116,6 +132,10 @@ void setup() {
   // PWM @ 8 kHz
   setup_PWM(8000);
   pinMode(pwmPin1, OUTPUT);
+
+  // IR
+    // Start the receiver and if not 3. parameter specified, take LED_BUILTIN pin from the internal boards definition as default feedback LED
+  IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);
   
 }
 
@@ -137,9 +157,6 @@ void two_dots(CRGBSet& L){
 }
 
 
-
-
-
 void loop() {
 
   //two_dots(leds);
@@ -155,7 +172,7 @@ void loop() {
   //}
   
   // some random PWM
-  //setPWMDutyCycle(pwmPin1, (1+random8(100)));
+  setPWMDutyCycle(pwmPin1, 100);
   //delay(25 + random8(100));
   //delay();
   //uint8_t pwm_val = inoise8(scale-y);
@@ -179,7 +196,26 @@ void loop() {
   //y += speed;
 
   // Test Twinkle
-  currentPalette = Palette[15];
-  drawTwinkles(leds, *currentPalette);
+  //currentPalette = Palette[15];
+  //drawTwinkles(leds, *currentPalette);
   //FastLED.show();
+
+  // test step-like rainbow, when the rainbow climbs up
+  //rainobw_stepd(leds, shue, delay_ms*2);
+  //static uint8_t dhue = 0;
+  //dhue = (int)(255/NUM_LEDS); // hues of leds #0 and num_leds will be the same
+  //rainbow_step(leds, shue, dhue, delay_ms*2);
+  //shue+=5;
+
+  // test gradual fill
+  //rainbow_gradual_fill(leds,shue, delay_ms*2);
+  //gradual_fill_fade2(leds,shue, 25, 16);
+  //shue+=5;
+
+  // testing rainbow sinewave
+  //sinewave(leds, bpm, fadeAmt, shue, delay_ms);
+  currentPalette = Palette[7];
+  sinewave_pal(leds,  currentPalette, bpm, fadeAmt, shue, delay_ms);
+  shue+=1;
+
 }
